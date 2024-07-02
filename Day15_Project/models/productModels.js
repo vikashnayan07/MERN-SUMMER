@@ -1,29 +1,11 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
-  {
-    firstName: {
-      type: String,
-    },
-    lastName: {
-      type: String,
-    },
-    email: {
-      type: String,
-      unique: true,
-    },
-    metaData: {},
-    createdAt: {
-      type: Date,
-      default: new Date(),
-    },
-    updatedAt: {
-      type: Date,
-      default: new Date(),
-    },
-  },
-  { timestamps: true }
-);
+const userSchema = new mongoose.Schema({
+  pizza_name: String,
+  pizza_category: String,
+  pizza_size: String,
+  pizza_price: String,
+});
 
-const productModel = mongoose.model("product", userSchema);
+const productModel = mongoose.model("Pizza", userSchema);
 module.exports = productModel;

@@ -5,7 +5,7 @@ const checkId = async (req, res) => {
     const { id } = req.params;
     const product = await productModel.findById(id);
     if (!product) {
-      res.status(400).json({ status: "Failed", msg: "Invalid product Id" });
+      res.status(400).json({ status: "Failed", msg: "Not present" });
     }
   } catch (error) {
     if (error.name === "CasteError") {
@@ -77,14 +77,14 @@ const replacedProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-
+    body.updateAt = Date.now();
     const deleteProduct = await productModel.findOneAndDelete(
       { _id: id },
       {
         new: true,
       }
     );
-    res.status(201).json({
+    res.status(204).json({
       status: "Deleted Successfully",
       data: { product: deleteProduct },
     });
@@ -98,6 +98,8 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
+    body.updateAt = Date.now();
+    console.log(ans);
     const update = await productModel.findByIdAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -116,6 +118,18 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const listProduct = async (req, res) => {
+  const { limit = 15, ...filters } = req.query;
+
+  const pizzasQuery = productModel.find(filters);
+  const limitedpizza = await pizzasQuery.limit(limit);
+  res.json({
+    status: "Success",
+    data: {
+      product: limitedpizza,
+    },
+  });
+};
 module.exports = {
   getProducts,
   createProduct,
@@ -123,4 +137,5 @@ module.exports = {
   checkId,
   deleteProduct,
   updateProduct,
+  listProduct,
 };
